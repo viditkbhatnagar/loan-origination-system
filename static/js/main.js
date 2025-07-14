@@ -28,7 +28,7 @@ function initializeCamera() {
 function initializeForms() {
     const loanForm = document.getElementById('loan-form');
     if (loanForm) {
-        loanForm.addEventListener('submit', handleLoanSubmission);
+    loanForm.addEventListener('submit', handleLoanSubmission);
         
         // Add prefill button
         addPrefillButton();
@@ -249,7 +249,7 @@ async function handleLoanSubmission(event) {
     }
 }
 
-// Load analytics after loan results  
+// Load analytics after loan results
 function loadAnalytics(result) {
     fetch('/get_analytics')
         .then(response => response.json())
@@ -665,7 +665,7 @@ function displayLoanResults(result) {
     `;
     
     resultsDiv.innerHTML = html;
-    
+
     // Store result data for analytics
     window.loanResultData = result;
     
