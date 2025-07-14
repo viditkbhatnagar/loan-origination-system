@@ -52,6 +52,27 @@ pip install -r requirements.txt
 pip install -r requirements-mac.txt
 ```
 
+#### TensorFlow Installation (Required for Deep Learning Models)
+
+**For most users (Windows/Linux/Intel Mac):**
+```bash
+pip install tensorflow
+```
+
+**For Apple Silicon (M1/M2/M3 Macs):**
+```bash
+pip install tensorflow-macos==2.16.2
+pip install tensorflow-metal==1.2.0
+```
+
+**Alternative installation (if version-specific fails):**
+```bash
+pip install tensorflow-macos
+pip install tensorflow-metal
+```
+
+> **Note**: TensorFlow is required for the deep learning models (ANN, CNN, RNN). If you encounter issues on Apple Silicon, see the [official Apple guide](https://developer.apple.com/metal/tensorflow-plugin/).
+
 ### 3. Setup Project Structure
 ```bash
 python setup.py
@@ -177,6 +198,47 @@ The system uses multiple AI models with the following configurations:
 - **Random Forest**: 100 trees with optimized hyperparameters
 - **K-Means**: 5 clusters for customer segmentation
 
+## 🔄 Project Flow
+
+### How the System Works
+
+```mermaid
+flowchart TD
+    A["User uploads data / fills application"] --> B["Data Preprocessing"]
+    B --> C{"Face Verification?"}
+    C -- "Yes" --> D["Face Verification (KYC)"]
+    C -- "No" --> E["Skip KYC"]
+    D --> F["Feature Engineering"]
+    E --> F
+    F --> G["Model Predictions"]
+    G --> G1["Random Forest"]
+    G --> G2["ANN (TensorFlow)"]
+    G --> G3["CNN (TensorFlow)"]
+    G --> G4["RNN (TensorFlow)"]
+    G1 --> H["Ensemble Voting"]
+    G2 --> H
+    G3 --> H
+    G4 --> H
+    H --> I["Loan Eligibility & Terms Prediction"]
+    I --> J["Analytics Dashboard"]
+    J --> K["User sees results, analytics, and offers"]
+    subgraph Model_Training
+        M1["Prepare Dataset"]
+        M2["Train Models (Random Forest, ANN, CNN, RNN)"]
+        M3["Save Models to models/saved_models/"]
+        M1 --> M2 --> M3
+    end
+    M3 -.-> G
+```
+
+**Key Components:**
+- **Data Preprocessing**: Handles missing values, encoding, scaling
+- **Face Verification**: Optional KYC using face recognition
+- **Feature Engineering**: Creates 29+ features from 17 original columns
+- **Model Predictions**: Ensemble of 4 models (RF + 3 TensorFlow models)
+- **Ensemble Voting**: Weighted average for final prediction
+- **Analytics Dashboard**: Real-time model performance and insights
+
 ## 📊 Usage Guide
 
 ### 1. Loan Application Process
@@ -228,12 +290,33 @@ python test_dynamic_system.py
 
 ### Common Issues and Solutions
 
-#### 1. TensorFlow Memory Issues
+#### 1. TensorFlow Installation Issues
+
+**If TensorFlow is not installed:**
+```bash
+# For most users
+pip install tensorflow
+
+# For Apple Silicon Macs
+pip install tensorflow-macos==2.16.2
+pip install tensorflow-metal==1.2.0
+
+# Alternative (if version-specific fails)
+pip install tensorflow-macos
+pip install tensorflow-metal
+```
+
+**If you encounter memory issues:**
 ```bash
 # The system automatically configures TensorFlow for CPU mode
 # If you encounter memory issues, try:
 export TF_CPP_MIN_LOG_LEVEL=2
 export TF_ENABLE_ONEDNN_OPTS=0
+```
+
+**Verify TensorFlow installation:**
+```bash
+python -c "import tensorflow as tf; print(f'TensorFlow version: {tf.__version__}')"
 ```
 
 #### 2. Missing Dependencies
